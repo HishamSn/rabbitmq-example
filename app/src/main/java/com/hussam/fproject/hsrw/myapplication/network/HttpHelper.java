@@ -1,15 +1,12 @@
 package com.hussam.fproject.hsrw.myapplication.network;
 
 
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
-import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.BASE_URL;
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.BASE_URL_API;
 
 
 public class HttpHelper {
@@ -19,7 +16,7 @@ public class HttpHelper {
 
     private HttpHelper() {
         retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL_API)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .addCallAdapterFactory(new HttpFactory())
                 .client(getClient())

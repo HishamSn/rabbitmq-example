@@ -1,6 +1,7 @@
-package com.hussam.fproject.hsrw.myapplication.ui;
+package com.hussam.fproject.hsrw.myapplication.ui.faplab;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.hussam.fproject.hsrw.myapplication.R;
 import com.hussam.fproject.hsrw.myapplication.model.Queues;
+import com.hussam.fproject.hsrw.myapplication.ui.chat.ChatActivity;
 
 import java.util.List;
 
@@ -39,7 +41,9 @@ public class FablabAdapter extends RecyclerView.Adapter<FablabAdapter.ViewHolder
     public void onBindViewHolder(@NonNull FablabAdapter.ViewHolder holder, int position) {
         holder.tvName.setText(queuesList.get(position).getName());
         holder.itemView.setOnClickListener(v -> {
-
+            Intent intent = new Intent(context, ChatActivity.class);
+            intent.putExtra("user_name", queuesList.get(position).getName());
+            context.startActivity(intent);
         });
     }
 

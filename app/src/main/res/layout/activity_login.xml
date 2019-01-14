@@ -21,14 +21,14 @@
         android:layout_marginStart="@dimen/_5sdp"
         android:text="User Name"
         android:textSize="@dimen/_15ssp"
-        app:layout_constraintBottom_toTopOf="@+id/et_username"
-        app:layout_constraintEnd_toEndOf="@+id/et_username"
-        app:layout_constraintStart_toStartOf="@+id/et_username"
+        app:layout_constraintBottom_toTopOf="@+id/et_chat_content"
+        app:layout_constraintEnd_toEndOf="@+id/et_chat_content"
+        app:layout_constraintStart_toStartOf="@+id/et_chat_content"
         app:layout_constraintTop_toBottomOf="@+id/iv_splash" />
 
 
     <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/et_username"
+        android:id="@+id/et_chat_content"
         style="@style/custom_edit_text"
         android:layout_width="0dp"
         android:layout_marginStart="@dimen/_20sdp"
@@ -49,7 +49,7 @@
         android:textSize="@dimen/_15ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_username" />
+        app:layout_constraintTop_toBottomOf="@+id/et_chat_content" />
 
 
     <android.support.v7.widget.AppCompatButton

@@ -17,7 +17,7 @@
 
 
     <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/et_username"
+        android:id="@+id/et_chat_content"
         style="@style/custom_edit_text"
         android:layout_width="0dp"
         android:layout_marginStart="@dimen/_20sdp"
@@ -39,7 +39,7 @@
         android:hint="Enter The Admin Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_username" />
+        app:layout_constraintTop_toBottomOf="@+id/et_chat_content" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_create"

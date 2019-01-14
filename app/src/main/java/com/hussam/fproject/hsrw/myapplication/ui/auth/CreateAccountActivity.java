@@ -27,7 +27,7 @@ import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.connectio
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    @BindView(R.id.et_username)
+    @BindView(R.id.et_chat_content)
     AppCompatEditText etUsername;
     @BindView(R.id.et_password)
     AppCompatEditText etPassword;
@@ -57,8 +57,12 @@ public class CreateAccountActivity extends AppCompatActivity {
 //                channel.queueBind(queue.getQueue(), "ExchangeName", "key");
                 CachedUtil.getInstance().queueList.add(new Queues(userName));
                 CachedUtil.getInstance().queueNameList.add(userName);
-                Toast.makeText(context, userName + " Created", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(context, LoginActivity.class));
+                runOnUiThread(() -> {
+                    Toast.makeText(context, userName + " Created", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(context, LoginActivity.class));
+                    finish();
+                });
+
 
             } catch (Exception e1) {
                 Log.d("", "Connection broken: " + e1.getClass().getName());

@@ -9,8 +9,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hussam.fproject.hsrw.myapplication.R;
-import com.hussam.fproject.hsrw.myapplication.ui.FablabActivity;
+import com.hussam.fproject.hsrw.myapplication.ui.faplab.FablabActivity;
 import com.hussam.fproject.hsrw.myapplication.util.CachedUtil;
+import com.hussam.fproject.hsrw.myapplication.util.SessionUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,7 +19,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @BindView(R.id.et_username)
+    @BindView(R.id.et_chat_content)
     AppCompatEditText etUserName;
 
     @Override
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         if (CachedUtil.getInstance().queueNameList.contains(etUserName.getText().toString())) {
             Intent intent = new Intent(this, FablabActivity.class);
-            intent.putExtra("user_name", etUserName.getText().toString());
+            SessionUtil.getInstance().login(etUserName.getText().toString());
             startActivity(intent);
         } else {
             Toast.makeText(this, getString(R.string.user_name_not_exist), Toast.LENGTH_LONG).show();

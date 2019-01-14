@@ -24,13 +24,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeoutException;
 
 import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.connectionFactory;
-import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.setupFactory;
 
 public class MainActivity extends AppCompatActivity {
     private final static String QUEUE_NAME = "chat_queue99";
     private Thread subscribeThread;
     private Thread publishThread;
-    //    private ConnectionFactory factory = new ConnectionFactory();
     Connection connection;
     Channel channel;
 
@@ -136,24 +134,23 @@ public class MainActivity extends AppCompatActivity {
                 channel.queueBind(queue.getQueue(), "husi3", "key0");
 
 
-//                DefaultConsumer consumer = new DefaultConsumer(channel) {
-//
-//                    @Override
-//                    public void handleDelivery(String consumerTag,
-//                                               Envelope envelope, AMQP.BasicProperties properties,
-//                                               byte[] body) {
-//                        String message = new String(body);
-//                        Log.d("", "[r] " + message);
-//
-//                        Message msg = handler.obtainMessage();
-//                        Bundle bundle = new Bundle();
-//
-//                        bundle.putString("msg", message);
-//                        msg.setData(bundle);
-//                        handler.sendMessage(msg);
-//                    }
-//                };
-//                channel.basicConsume(queue.getQueue(), true, consumer);
+                DefaultConsumer consumer = new DefaultConsumer(channel) {
+
+                    @Override
+                    public void handleDelivery(String consumerTag,
+                                               Envelope envelope, AMQP.BasicProperties properties,
+                                               byte[] body) {
+                        String message = new String(body);
+                        Log.d("", "[r] " + message);
+
+                        Message msg = handler.obtainMessage();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("msg", message);
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
+                    }
+                };
+                channel.basicConsume(queue.getQueue(), true, consumer);
 
             } catch (Exception e1) {
                 Log.d("", "Connection broken: " + e1.getClass().getName());
@@ -176,12 +173,7 @@ public class MainActivity extends AppCompatActivity {
         publishThread = new Thread(() -> {
             while (true) {
                 try {
-
                     createConnection();
-
-//                        Connection connection = factory.newConnection();
-//                        Channel channel = connection.createChannel();
-
                     channel.confirmSelect();
 
                     while (true) {

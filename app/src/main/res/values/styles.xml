@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">#2f275f</item>
         <item name="colorAccent">#4472c2</item>
+        <!--<item name="android:windowBackground">#fff</item>-->
     </style>
     <style name="custom_edit_text">
 
@@ -16,6 +17,17 @@
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
         <item name="android:maxLength">64</item>
+        <item name="android:layout_marginEnd">@dimen/_10sdp</item>
+        <item name="android:paddingStart">@dimen/_10sdp</item>
+        <item name="android:paddingEnd">@dimen/_10sdp</item>
+        <item name="android:layout_marginStart">@dimen/_10sdp</item>
+
+    </style>
+
+    <style name="custom_corner_white">
+
+        <item name="android:background">@drawable/shape_corner_white</item>
+        <item name="android:layout_marginTop">@dimen/_4sdp</item>
         <item name="android:layout_marginEnd">@dimen/_10sdp</item>
         <item name="android:paddingStart">@dimen/_10sdp</item>
         <item name="android:paddingEnd">@dimen/_10sdp</item>
