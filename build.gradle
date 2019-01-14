@@ -1,14 +1,145 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
+ext.versions = [
+        'kotlin'             : '1.2.70',
+        'applicationId'      : 'com.noventapp.direct.user',
+        'versionName'        : '1.28',
+        'versionCode'        : 28,
+        'compileSdk'         : 27,
+        'minSdk'             : 19,
+        'targetSdk'          : 27,
+        'gradle'             : '3.1.0',
+        'buildTools'         : '26.0.2',
+        'supportLibrary'     : '28.0.0',
+        'constraint'         : '1.1.0',
+        'stetho'             : '1.5.0',
+        'retrofit'           : '2.3.0',
+        'glide'              : '4.2.0',
+        'sdp'                : '1.0.5',
+        'ssp'                : '1.0.5',
+        'saripaar'           : '2.0.3',
+        'google'             : '11.8.0',
+        'roundedimageview'   : '2.3.0',
+        'multidex'           : '1.0.2',
+        'dataBinding'        : '3.0.1',
+        'butterknife'        : '8.8.1',
+        'googleServices'     : '3.1.1',
+        'smartlocation'      : '3.3.3',
+        'pagerIndicator'     : 'v1.0.1',
+        'ShimmerRecyclerView': 'v1.3',
+        'eventbus'           : '3.1.0-RC',
+        'socket'             : '1.0.0',
+        'imagePicker'        : '1.2.1',
+        'room'               : '1.0.0',
+        'rxAndroid'          : '2.0.1',
+        'rxJava'             : '2.1.1',
+        'countryPicker'      : '2.1.5',
+        'logging'            : '3.9.1'
+]
+
+ext.deps = [
+
+        support               : [
+                'appcompatV7' : "com.android.support:appcompat-v7:$versions.supportLibrary",
+                'appcompatV4' : "com.android.support:support-v4:$versions.supportLibrary",
+                'recyclerview': "com.android.support:recyclerview-v7:$versions.supportLibrary",
+                'cardview'    : "com.android.support:cardview-v7:$versions.supportLibrary",
+                'design'      : "com.android.support:design:$versions.supportLibrary",
+                'customtabs'  : "com.android.support:customtabs:$versions.supportLibrary",
+                'constraint'  : "com.android.support.constraint:constraint-layout:$versions.constraint",
+        ],
+        architectureComponents: [
+                'room'        : "android.arch.persistence.room:runtime:$versions.room",
+                'roomCompiler': "android.arch.persistence.room:compiler:$versions.room",
+                'roomRx'      : "android.arch.persistence.room:rxjava2:$versions.room"
+        ],
+        facebook              : [
+                'stetho': "com.facebook.stetho:stetho-okhttp3:$versions.stetho",
+        ],
+        rx                    : [
+                'android': "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+                'java'   : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
+        ],
+        squareup              : [
+                'retrofit'             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+                'retrofitConverter'    : "com.squareup.retrofit2:converter-moshi:$versions.retrofit",
+                'retrofitConverterGson': "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+                'logging'              : "com.squareup.okhttp3:logging-interceptor:$versions.logging"
+        ],
+        glide                 : [
+                'library' : "com.github.bumptech.glide:glide:$versions.glide",
+                'compiler': "com.github.bumptech.glide:compiler:$versions.glide",
+        ],
+        unit                  : [
+                'sdp': "com.intuit.sdp:sdp-android:$versions.sdp",
+                'ssp': "com.intuit.ssp:ssp-android:$versions.ssp"
+        ],
+        saripaar              : [
+                'saripaar': "com.mobsandgeeks:android-saripaar:$versions.saripaar"
+        ],
+        imageView             : [
+                'roundedimageview': "com.makeramen:roundedimageview:$versions.roundedimageview"
+        ],
+        multidex              : [
+                'multidex': "com.android.support:multidex:$versions.multidex"
+        ],
+        kotlin                : [
+                'kotlin': "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin"
+        ],
+        dataBinding           : [
+                'compiler': "com.android.databinding:compiler:$versions.dataBinding"
+        ],
+        jakewharton           : [
+                'butterknife': "com.jakewharton:butterknife:$versions.butterknife",
+                'compiler'   : "com.jakewharton:butterknife-compiler:$versions.butterknife"
+        ],
+        google                : [
+                'core'             : "com.google.firebase:firebase-core:$versions.google",
+                'location'         : "com.google.android.gms:play-services-location:$versions.google",
+                'firebaseMessaging': "com.google.firebase:firebase-messaging:$versions.google",
+                'maps'             : "com.google.android.gms:play-services-maps:$versions.google",
+                'places'           : "com.google.android.gms:play-services-places:$versions.google"
+        ],
+        smartlocation         : [
+                'library': "io.nlopez.smartlocation:library:$versions.smartlocation"
+        ],
+        realm                 : [
+                'compiler': "io.realm:realm-annotations-processor:$versions.realm"
+        ],
+        countryPicker         : [
+                'library': "com.github.joielechong:countrycodepicker:$versions.countryPicker"
+        ],
+        pagerIndicator        : [
+                'library': "com.github.vivchar:ViewPagerIndicator:$versions.pagerIndicator"
+        ],
+        eventbus              : [
+                'library'  : "org.greenrobot:eventbus:$versions.eventbus",
+                'processor': "org.greenrobot:eventbus-annotation-processor:3.0.1"
+        ],
+        socket                : [
+                'client': "io.socket:socket.io-client:$versions.socket"
+        ],
+        imagePicker           : [
+                'library': "com.github.nguyenhoanglam:ImagePicker:$versions.imagePicker"
+        ],
+        ShimmerRecyclerView   : [
+                'loaddata': "com.github.sharish:ShimmerRecyclerView:$versions.ShimmerRecyclerView"
+        ]
+]
+
+
+
+
+
 buildscript {
-    
+
     repositories {
         google()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

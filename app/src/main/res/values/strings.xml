@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">HSRW Chat</string>
+    <string name="user_name_not_exist">This user name not exist , please create a new Account</string>
 </resources>
