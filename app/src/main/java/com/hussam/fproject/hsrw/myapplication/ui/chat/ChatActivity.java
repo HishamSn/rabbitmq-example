@@ -54,7 +54,8 @@ public class ChatActivity extends AppCompatActivity {
     Connection connection;
     Channel channel;
     private BlockingDeque<String> queue = new LinkedBlockingDeque<String>();
-
+    SimpleDateFormat ft;
+    Date date;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,18 +70,15 @@ public class ChatActivity extends AppCompatActivity {
         tvName.setText(userName);
         publishToAMQP();
 
-        final Handler incomingMessageHandler = new Handler() {
+
+        final Handler incomingPartnerMessagesHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                Toast.makeText(context, "success subscribe", Toast.LENGTH_LONG).show();
 
                 String message = msg.getData().getString("msg");
-                Date now = new Date();
-                SimpleDateFormat ft = new SimpleDateFormat("hh:mm");
-//                tvDate.append('\n' + ft.format(now));
-//                tvMessages.append('\n' + message);
+                Toast.makeText(context, "received " + message, Toast.LENGTH_SHORT).show();
 
-                Chat chat = new Chat(userName, message, ft.format(now));
+                Chat chat = new Chat(userName, message, ft.format(date));
                 chatList.add(chat);
                 rvChat.setAdapter(new ChatAdapter(chatList));
 
@@ -88,13 +86,17 @@ public class ChatActivity extends AppCompatActivity {
         };
 
 
-//        subscribePartner(incomingMessageHandler);
+        subscribeMyMessagesFromPartner(incomingPartnerMessagesHandler);
 
     }
 
     private void init() {
         chatList = new ArrayList<>();
         rvChat.setAdapter(new ChatAdapter(chatList));
+
+        date = new Date();
+        ft = new SimpleDateFormat("hh:mm");
+
     }
 
 
@@ -111,8 +113,8 @@ public class ChatActivity extends AppCompatActivity {
 
     public void publishToAMQP() {
         publishThread = new Thread(() -> {
+            createConnection();
             while (true) {
-                createConnection();
 
                 try {
                     channel.confirmSelect();
@@ -122,17 +124,21 @@ public class ChatActivity extends AppCompatActivity {
                         try {
 
 //                            channel.queueBind(queueName, EXCHANGE_NAME, "Routing_key");
-                            channel.queueBind(userName, "key0", PrefsUtils.getInstance().getUserName());
+                            channel.queueBind(userName, "key0", userName + "_" + PrefsUtils.getInstance().getUserName());
 
 
-                            channel.basicPublish("key0", PrefsUtils.getInstance().getUserName(), null, message.getBytes());
+                            channel.basicPublish("key0", userName + "_" + PrefsUtils.getInstance().getUserName(), null, message.getBytes());
                             Log.d("", "[s] " + message);
                             channel.waitForConfirmsOrDie();
 
                             runOnUiThread(() -> {
+                                Chat chat = new Chat(PrefsUtils.getInstance().getUserName(), message, ft.format(date));
+                                chatList.add(chat);
+                                rvChat.setAdapter(new ChatAdapter(chatList));
+
                                 Toast.makeText(context,
                                         "key0 send to " + userName + " in routing key "
-                                                + PrefsUtils.getInstance().getUserName(), Toast.LENGTH_LONG).show();
+                                                + PrefsUtils.getInstance().getUserName(), Toast.LENGTH_SHORT).show();
                             });
 
                         } catch (Exception e) {
@@ -142,13 +148,13 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     }
                 } catch (InterruptedException e) {
-                    break;
+//                    break;
                 } catch (Exception e) {
                     Log.d("", "Connection broken: " + e.getClass().getName());
                     try {
                         Thread.sleep(5000); //sleep and then try again
                     } catch (InterruptedException e1) {
-                        break;
+//                        break;
                     }
                 }
             }
@@ -175,39 +181,39 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    void subscribePartner(final Handler handler) {
+    void subscribeMyMessagesFromPartner(final Handler handler) {
         subscribeThread = new Thread(() -> {
             try {
                 createConnection();
 
-                while (true) {
+//                while (true) {
 
 
-                    channel.basicQos(1); //Todo whats mean
-                    AMQP.Queue.DeclareOk queue = channel.queueDeclare(userName, false, false, false, null);
-                    channel.queueBind(queue.getQueue(), "key0", PrefsUtils.getInstance().getUserName());
+                channel.basicQos(10); //Todo whats mean
+//                    AMQP.Queue.DeclareOk queue = channel.queueDeclare(PrefsUtils.getInstance().getUserName(), false, false, false, null);
+                channel.queueBind(PrefsUtils.getInstance().getUserName(), "key0", PrefsUtils.getInstance().getUserName() + "_" + userName);
 
 //                channel.queueBind(queue.getQueue(), "husi3", "key0");
 
-                    DefaultConsumer consumer = new DefaultConsumer(channel) {
+                DefaultConsumer consumer = new DefaultConsumer(channel) {
 
-                        @Override
-                        public void handleDelivery(String consumerTag,
-                                                   Envelope envelope, AMQP.BasicProperties properties,
-                                                   byte[] body) {
-                            String message = new String(body);
-                            Log.d("", "[r] " + message);
+                    @Override
+                    public void handleDelivery(String consumerTag,
+                                               Envelope envelope, AMQP.BasicProperties properties,
+                                               byte[] body) {
+                        String message = new String(body);
+                        Log.d("", "[r] " + message);
 
-                            Message msg = handler.obtainMessage();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("msg", message);
-                            msg.setData(bundle);
-                            handler.sendMessage(msg);
-                        }
-                    };
-                    channel.basicConsume(queue.getQueue(), true, consumer);
+                        Message msg = handler.obtainMessage();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("msg", message);
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
+                    }
+                };
+                channel.basicConsume(PrefsUtils.getInstance().getUserName(), true, consumer);
 
-                }
+//                }
             } catch (Exception e1) {
                 Log.d("", "Connection broken: " + e1.getClass().getName());
                 try {

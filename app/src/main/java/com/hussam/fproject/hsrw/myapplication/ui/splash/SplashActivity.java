@@ -45,6 +45,9 @@ public class SplashActivity extends AppCompatActivity {
         stopAnimation = () -> {
             QueueRemoteDao.getInstance().getQueuesList().enqueue(result -> {
                 if (result.getStatus() == HttpStatus.SUCCESS) {
+                    CachedUtil.getInstance().queueNameList.clear();
+                    CachedUtil.getInstance().queueList.clear();
+
                     CachedUtil.getInstance().queueList.addAll(result.getResult());
                     for (int i = 0; i < result.getResult().size(); i++) {
                         CachedUtil.getInstance().queueNameList.add(result.getResult().get(i).getName());
