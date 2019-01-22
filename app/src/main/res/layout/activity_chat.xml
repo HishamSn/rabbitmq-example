@@ -19,7 +19,7 @@
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
         android:layout_marginStart="@dimen/_7sdp"
-        android:background="@drawable/ic_user"
+        tools:background="@drawable/ic_user"
         android:backgroundTint="#fff"
         app:layout_constraintBottom_toBottomOf="@+id/view_bar"
         app:layout_constraintStart_toStartOf="parent"

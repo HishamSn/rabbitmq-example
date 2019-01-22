@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
 
 import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.connectionFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity1 extends AppCompatActivity {
     private final static String QUEUE_NAME = "chat_queue99";
     private Thread subscribeThread;
     private Thread publishThread;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main1);
 //        setupFactory();
 //        setupConnectionFactory();
 

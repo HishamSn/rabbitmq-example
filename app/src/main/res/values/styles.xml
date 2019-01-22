@@ -24,6 +24,20 @@
 
     </style>
 
+    <style name="textView_default">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="custom_spinner" parent="Platform.Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/shape_corner_border</item>
+        <item name="android:dropDownVerticalOffset">@dimen/_30sdp</item>
+        <item name="android:layout_height">@dimen/_30sdp</item>
+        <item name="android:layout_marginStart">@dimen/_20sdp</item>
+    </style>
+
+
     <style name="custom_corner_white">
 
         <item name="android:background">@drawable/shape_corner_white</item>

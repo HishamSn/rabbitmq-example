@@ -1,4 +1,4 @@
-package com.hussam.fproject.hsrw.myapplication.ui.faplab;
+package com.hussam.fproject.hsrw.myapplication.ui.lib;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,23 +10,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hussam.fproject.hsrw.myapplication.R;
-import com.hussam.fproject.hsrw.myapplication.model.Queues;
 import com.hussam.fproject.hsrw.myapplication.ui.chat.ChatActivity;
 
 import java.util.List;
 
-public class FablabAdapter extends RecyclerView.Adapter<FablabAdapter.ViewHolder> {
-    private static final int ROW_USERS_TYPE = R.layout.row_name;
-    private List<Queues> queuesList;
+public class LibGroupAdapter extends RecyclerView.Adapter<LibGroupAdapter.ViewHolder> {
+    private static final int ROW_GROUP_TYPE = R.layout.row_groups;
+    private List<String> majorList;
     private Context context;
 
-    public FablabAdapter(List<Queues> queues) {
-        this.queuesList = queues;
+    public LibGroupAdapter(List<String> queues) {
+        this.majorList = queues;
     }
 
     @NonNull
     @Override
-    public FablabAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
         return new ViewHolder(view);
     }
@@ -38,12 +37,12 @@ public class FablabAdapter extends RecyclerView.Adapter<FablabAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FablabAdapter.ViewHolder holder, int position) {
-        holder.tvName.setText(queuesList.get(position).getName());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.tvName.setText(majorList.get(position));
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatActivity.class);
-            intent.putExtra("user_name", queuesList.get(position).getMajor() + "_" + queuesList.get(position).getName());
-            intent.putExtra("type", "Direct");
+            intent.putExtra("group", majorList.get(position));
+            intent.putExtra("type", "Topic");
             context.startActivity(intent);
         });
     }
@@ -51,12 +50,12 @@ public class FablabAdapter extends RecyclerView.Adapter<FablabAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return queuesList.size();
+        return majorList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return ROW_USERS_TYPE;
+        return ROW_GROUP_TYPE;
     }
 
 

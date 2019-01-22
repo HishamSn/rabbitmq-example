@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hussam.fproject.hsrw.myapplication.R;
-import com.hussam.fproject.hsrw.myapplication.ui.faplab.FablabActivity;
+import com.hussam.fproject.hsrw.myapplication.model.Queues;
+import com.hussam.fproject.hsrw.myapplication.ui.main.MainActivity;
 import com.hussam.fproject.hsrw.myapplication.util.CachedUtil;
 import com.hussam.fproject.hsrw.myapplication.util.SessionUtil;
 
@@ -32,8 +33,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login() {
         if (CachedUtil.getInstance().queueNameList.contains(etUserName.getText().toString())) {
-            Intent intent = new Intent(this, FablabActivity.class);
-            SessionUtil.getInstance().login(etUserName.getText().toString());
+            Intent intent = new Intent(this, MainActivity.class);
+
+            int index = CachedUtil.getInstance().queueNameList.indexOf(etUserName.getText().toString());
+
+
+            Queues user = CachedUtil.getInstance().queueList.get(index);
+            SessionUtil.getInstance().login(user.getMajor() + "_" + user.getName());
+
             startActivity(intent);
         } else {
             Toast.makeText(this, getString(R.string.user_name_not_exist), Toast.LENGTH_LONG).show();

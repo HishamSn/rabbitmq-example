@@ -33,6 +33,7 @@ import java.util.concurrent.TimeoutException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.connectionFactory;
 
@@ -44,7 +45,11 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView rvChat;
     @BindView(R.id.et_chat_content)
     AppCompatEditText etChatContent;
+    @BindView(R.id.iv_user)
+    CircleImageView ivUser;
     private String userName;
+    private String type;
+    private String group;
 
     private List<Chat> chatList;
     private Context context = this;
@@ -67,7 +72,9 @@ public class ChatActivity extends AppCompatActivity {
         init();
 
         userName = getIntent().getExtras().getString("user_name");
-        tvName.setText(userName);
+        type = getIntent().getExtras().getString("type");
+        group = getIntent().getExtras().getString("group");
+        fillHeader();
         publishToAMQP();
 
 
@@ -78,9 +85,22 @@ public class ChatActivity extends AppCompatActivity {
                 String message = msg.getData().getString("msg");
                 Toast.makeText(context, "received " + message, Toast.LENGTH_SHORT).show();
 
+                if (!type.equals("Direct")) {
+                    String[] partsMsg = message.split("__#");
+                    String[] userNameMsg = partsMsg[0].split("_");
+                    userName = userNameMsg[1];
+
+                    message = partsMsg[1];
+                } else {
+                    String[] userNameMsg = message.split("_");
+                    userName = userNameMsg[1];
+                }
+
+
                 Chat chat = new Chat(userName, message, ft.format(date));
                 chatList.add(chat);
-                rvChat.setAdapter(new ChatAdapter(chatList));
+                rvChat.getAdapter().notifyDataSetChanged();
+                rvChat.smoothScrollToPosition(rvChat.getAdapter().getItemCount()-1);
 
             }
         };
@@ -90,12 +110,29 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    private void fillHeader() {
+        if (type.equals("Direct")) {
+            tvName.setText(userName);
+            ivUser.setBackground(getResources().getDrawable(R.drawable.ic_user));
+        } else if (type.equals("Topic")) {
+            tvName.setText("Library");
+            ivUser.setBackground(getResources().getDrawable(R.drawable.ic_group));
+
+        } else {
+            tvName.setText("Mensa");
+            ivUser.setBackground(getResources().getDrawable(R.drawable.ic_group));
+
+        }
+    }
+
+
     private void init() {
         chatList = new ArrayList<>();
         rvChat.setAdapter(new ChatAdapter(chatList));
 
         date = new Date();
         ft = new SimpleDateFormat("hh:mm");
+        rvChat.setAdapter(new ChatAdapter(chatList));
 
     }
 
@@ -124,21 +161,36 @@ public class ChatActivity extends AppCompatActivity {
                         try {
 
 //                            channel.queueBind(queueName, EXCHANGE_NAME, "Routing_key");
-                            channel.queueBind(userName, "key0", userName + "_" + PrefsUtils.getInstance().getUserName());
 
+                            if (type.equals("Direct")) {
+                                channel.queueBind(userName, "key0", userName + "_" + PrefsUtils.getInstance().getUserName());
+                                channel.basicPublish("key0", userName + "_" + PrefsUtils.getInstance().getUserName(), null, message.getBytes());
+                            } else if (type.equals("Topic")) {
+                                message = PrefsUtils.getInstance().getUserName() + "__#" + message;
 
-                            channel.basicPublish("key0", userName + "_" + PrefsUtils.getInstance().getUserName(), null, message.getBytes());
+                                channel.basicPublish("key2", group, null, message.getBytes());
+
+                            } else {
+                                message = PrefsUtils.getInstance().getUserName() + "__#" + message;
+                                //Fanout
+//                                channel.queueBind(userName, "key0", userName + "_" + PrefsUtils.getInstance().getUserName());
+                                channel.basicPublish("key1", userName + "_all", null, message.getBytes());
+
+                            }
+
                             Log.d("", "[s] " + message);
+
                             channel.waitForConfirmsOrDie();
 
+                            String finalMessage = message;
                             runOnUiThread(() -> {
-                                Chat chat = new Chat(PrefsUtils.getInstance().getUserName(), message, ft.format(date));
-                                chatList.add(chat);
-                                rvChat.setAdapter(new ChatAdapter(chatList));
+                                if (type.equals("Direct")) {
+                                    Chat chat = new Chat(PrefsUtils.getInstance().getUserName(), finalMessage, ft.format(date));
+                                    chatList.add(chat);
+                                    rvChat.setAdapter(new ChatAdapter(chatList));
+                                }
 
-                                Toast.makeText(context,
-                                        "key0 send to " + userName + " in routing key "
-                                                + PrefsUtils.getInstance().getUserName(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, PrefsUtils.getInstance().getUserName() + " send to " + type, Toast.LENGTH_SHORT).show();
                             });
 
                         } catch (Exception e) {
@@ -191,7 +243,19 @@ public class ChatActivity extends AppCompatActivity {
 
                 channel.basicQos(10); //Todo whats mean
 //                    AMQP.Queue.DeclareOk queue = channel.queueDeclare(PrefsUtils.getInstance().getUserName(), false, false, false, null);
-                channel.queueBind(PrefsUtils.getInstance().getUserName(), "key0", PrefsUtils.getInstance().getUserName() + "_" + userName);
+
+
+                if (type.equals("Direct")) {
+                    channel.queueBind(PrefsUtils.getInstance().getUserName(), "key0", PrefsUtils.getInstance().getUserName() + "_" + userName);
+                } else if (type.equals("Topic")) {
+                    channel.queueBind(PrefsUtils.getInstance().getUserName(), "key2", group);
+
+                } else {
+                    //Fanout
+                    channel.queueBind(PrefsUtils.getInstance().getUserName(), "key1", "SA");
+
+                }
+
 
 //                channel.queueBind(queue.getQueue(), "husi3", "key0");
 

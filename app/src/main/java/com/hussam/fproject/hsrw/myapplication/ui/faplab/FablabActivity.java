@@ -8,20 +8,23 @@ import android.support.v7.widget.RecyclerView;
 import com.hussam.fproject.hsrw.myapplication.R;
 import com.hussam.fproject.hsrw.myapplication.util.CachedUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class FablabActivity extends AppCompatActivity {
-    private RecyclerView rvQueues;
+
+    @BindView(R.id.rv_users)
+    RecyclerView rvUsers;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fablab);
-        init();
-        rvQueues.setAdapter(new FablabAdapter(CachedUtil.getInstance().queueList));
+        ButterKnife.bind(this);
+        rvUsers.setAdapter(new FablabAdapter(CachedUtil.getInstance().queueList));
 
 
     }
 
-    private void init() {
-        rvQueues = findViewById(R.id.rv_queues);
-    }
+
 }

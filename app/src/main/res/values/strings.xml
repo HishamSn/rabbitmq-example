@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">HSRW Chat</string>
     <string name="user_name_not_exist">This user name not exist , please create a new Account</string>
+
+
+
+    <string-array name="major">
+        <item>CS</item>
+        <item>CIS</item>
+        <item>SE</item>
+        <item>bbb</item>
+        <item>ccc</item>
+        <item>ddd</item>
+        <item>eee</item>
+
+    </string-array>
+
+
+
 </resources>

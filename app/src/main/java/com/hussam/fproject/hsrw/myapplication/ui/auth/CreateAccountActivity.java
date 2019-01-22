@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
@@ -31,9 +35,12 @@ public class CreateAccountActivity extends AppCompatActivity {
     AppCompatEditText etUsername;
     @BindView(R.id.et_password)
     AppCompatEditText etPassword;
+    @BindView(R.id.sp_majors)
+    AppCompatSpinner spMajors;
     private Thread createAccountThread;
     Connection connection;
     Channel channel;
+    private List<String> majorList;
 
 
     private Context context = this;
@@ -43,19 +50,27 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
         ButterKnife.bind(this);
+        init();
+
+    }
+
+    private void init() {
+        majorList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.major)));
+        spMajors.setAdapter(new SpMajorAdapter(context, majorList));
 
     }
 
 
-    void createQueue(String userName) {
+    void createQueue(String major, String userName) {
         createAccountThread = new Thread(() -> {
             try {
                 //TODO(Hussam) : fix channel problem
                 createConnection();
                 channel.basicQos(1);
-                AMQP.Queue.DeclareOk queue = channel.queueDeclare(userName, false, false, false, null);
-//                channel.queueBind(queue.getQueue(), "ExchangeName", "key");
-                CachedUtil.getInstance().queueList.add(new Queues(userName));
+                AMQP.Queue.DeclareOk queue = channel.queueDeclare(major + "_" + userName, false, false, false, null);
+                channel.queueBind(queue.getQueue(), "key1", "SA");//fanout
+                channel.queueBind(queue.getQueue(), "key2", major);//group
+                CachedUtil.getInstance().queueList.add(new Queues(userName, major));
                 CachedUtil.getInstance().queueNameList.add(userName);
                 runOnUiThread(() -> {
                     Toast.makeText(context, userName + " Created", Toast.LENGTH_LONG).show();
@@ -91,7 +106,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     public void onViewClicked() {
         if (!etUsername.getText().toString().isEmpty() && !etPassword.getText().toString().isEmpty()) {
             if (etPassword.getText().toString().equals("1")) {
-                createQueue(etUsername.getText().toString());
+                createQueue(spMajors.getSelectedItem().toString(), etUsername.getText().toString());
             } else {
                 Toast.makeText(this, "Please Enter Correct Password", Toast.LENGTH_LONG).show();
             }

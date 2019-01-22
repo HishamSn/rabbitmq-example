@@ -10,6 +10,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
 import com.hussam.fproject.hsrw.myapplication.R;
+import com.hussam.fproject.hsrw.myapplication.model.Queues;
 import com.hussam.fproject.hsrw.myapplication.network.HttpStatus;
 import com.hussam.fproject.hsrw.myapplication.remote.QueueRemoteDao;
 import com.hussam.fproject.hsrw.myapplication.ui.auth.LoginActivity;
@@ -48,9 +49,11 @@ public class SplashActivity extends AppCompatActivity {
                     CachedUtil.getInstance().queueNameList.clear();
                     CachedUtil.getInstance().queueList.clear();
 
-                    CachedUtil.getInstance().queueList.addAll(result.getResult());
                     for (int i = 0; i < result.getResult().size(); i++) {
-                        CachedUtil.getInstance().queueNameList.add(result.getResult().get(i).getName());
+                        String[] users = result.getResult().get(i).getName().split("_");
+                        Queues user = new Queues(users[1], users[0]);
+                        CachedUtil.getInstance().queueList.add(user);
+                        CachedUtil.getInstance().queueNameList.add(users[1]);
                     }
                     goToActivity(LoginActivity.class);
                     finish();

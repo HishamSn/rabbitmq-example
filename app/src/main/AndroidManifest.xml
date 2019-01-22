@@ -13,9 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.MainActivity"/>
+        <activity android:name=".ui.main.MainActivity"/>
         <activity android:name=".ui.faplab.FablabActivity"/>
         <activity android:name=".ui.auth.LoginActivity"/>
+        <activity android:name=".ui.lib.LibGroupActivity"/>
 
         <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
