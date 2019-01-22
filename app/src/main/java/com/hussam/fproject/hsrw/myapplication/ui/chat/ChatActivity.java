@@ -91,9 +91,6 @@ public class ChatActivity extends AppCompatActivity {
                     userName = userNameMsg[1];
 
                     message = partsMsg[1];
-                } else {
-                    String[] userNameMsg = message.split("_");
-                    userName = userNameMsg[1];
                 }
 
 
@@ -185,7 +182,10 @@ public class ChatActivity extends AppCompatActivity {
                             String finalMessage = message;
                             runOnUiThread(() -> {
                                 if (type.equals("Direct")) {
-                                    Chat chat = new Chat(PrefsUtils.getInstance().getUserName(), finalMessage, ft.format(date));
+
+                                    String[] userNameMsg = PrefsUtils.getInstance().getUserName().split("_");
+                                    userName = userNameMsg[1];
+                                    Chat chat = new Chat(userName, finalMessage, ft.format(date));
                                     chatList.add(chat);
                                     rvChat.setAdapter(new ChatAdapter(chatList));
                                 }
