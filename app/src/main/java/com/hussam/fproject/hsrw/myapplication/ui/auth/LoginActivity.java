@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.hussam.fproject.hsrw.myapplication.R;
 import com.hussam.fproject.hsrw.myapplication.model.Queues;
+import com.hussam.fproject.hsrw.myapplication.network.HttpStatus;
+import com.hussam.fproject.hsrw.myapplication.remote.QueueRemoteDao;
 import com.hussam.fproject.hsrw.myapplication.ui.main.MainActivity;
 import com.hussam.fproject.hsrw.myapplication.util.CachedUtil;
 import com.hussam.fproject.hsrw.myapplication.util.SessionUtil;
@@ -29,6 +31,25 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+
+        refreshUserList();
+
+    }
+
+    private void refreshUserList() {
+        QueueRemoteDao.getInstance().getQueuesList().enqueue(result -> {
+            if (result.getStatus() == HttpStatus.SUCCESS) {
+                CachedUtil.getInstance().queueNameList.clear();
+                CachedUtil.getInstance().queueList.clear();
+                for (int i = 0; i < result.getResult().size(); i++) {
+                    String[] users = result.getResult().get(i).getName().split("_");
+                    Queues user = new Queues(users[1], users[0]);
+                    CachedUtil.getInstance().queueList.add(user);
+                    CachedUtil.getInstance().queueNameList.add(users[1]);
+                }
+            }
+
+        });
     }
 
     private void login() {

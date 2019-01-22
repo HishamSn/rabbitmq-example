@@ -59,7 +59,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                     Intent intent = new Intent(context, ChatActivity.class);
                     intent.putExtra("type", "Topic");
                     String[] userName = PrefsUtils.getInstance().getUserName().split("_");
-                    intent.putExtra("group", userName[1]);//Major
+                    intent.putExtra("group", userName[0]);//Major
 
                     context.startActivity(intent);
                 });
