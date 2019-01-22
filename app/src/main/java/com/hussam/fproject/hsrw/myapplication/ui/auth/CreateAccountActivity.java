@@ -27,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.EXCHANGE_FANOUT;
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.EXCHANGE_TOPIC;
 import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.connectionFactory;
 
 public class CreateAccountActivity extends AppCompatActivity {
@@ -68,8 +70,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                 createConnection();
                 channel.basicQos(1);
                 AMQP.Queue.DeclareOk queue = channel.queueDeclare(major + "_" + userName, false, false, false, null);
-                channel.queueBind(queue.getQueue(), "key1", "SA");//fanout
-                channel.queueBind(queue.getQueue(), "key2", major);//group
+                channel.queueBind(queue.getQueue(), EXCHANGE_FANOUT, "all");//fanout
+                channel.queueBind(queue.getQueue(), EXCHANGE_TOPIC, major);//group
                 CachedUtil.getInstance().queueList.add(new Queues(userName, major));
                 CachedUtil.getInstance().queueNameList.add(userName);
                 runOnUiThread(() -> {

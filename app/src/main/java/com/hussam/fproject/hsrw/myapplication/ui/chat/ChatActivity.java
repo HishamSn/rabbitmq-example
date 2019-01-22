@@ -35,6 +35,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.EXCHANGE_DIRECT;
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.EXCHANGE_FANOUT;
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.EXCHANGE_TOPIC;
 import static com.hussam.fproject.hsrw.myapplication.util.FactoryUtils.connectionFactory;
 
 public class ChatActivity extends AppCompatActivity {
@@ -97,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
                 Chat chat = new Chat(userName, message, ft.format(date));
                 chatList.add(chat);
                 rvChat.getAdapter().notifyDataSetChanged();
-                rvChat.smoothScrollToPosition(rvChat.getAdapter().getItemCount()-1);
+                rvChat.smoothScrollToPosition(rvChat.getAdapter().getItemCount() - 1);
 
             }
         };
@@ -160,19 +163,18 @@ public class ChatActivity extends AppCompatActivity {
 //                            channel.queueBind(queueName, EXCHANGE_NAME, "Routing_key");
 
                             if (type.equals("Direct")) {
-                                channel.queueBind(userName, "key0", userName + "_" + PrefsUtils.getInstance().getUserName());
-                                channel.basicPublish("key0", userName + "_" + PrefsUtils.getInstance().getUserName(), null, message.getBytes());
+                                channel.queueBind(userName, EXCHANGE_DIRECT, userName + "_" + PrefsUtils.getInstance().getUserName());
+                                channel.basicPublish(EXCHANGE_DIRECT, userName + "_" + PrefsUtils.getInstance().getUserName(), null, message.getBytes());
                             } else if (type.equals("Topic")) {
                                 message = PrefsUtils.getInstance().getUserName() + "__#" + message;
 
-                                channel.basicPublish("key2", group, null, message.getBytes());
+                                channel.basicPublish(EXCHANGE_TOPIC, group, null, message.getBytes());
 
                             } else {
                                 message = PrefsUtils.getInstance().getUserName() + "__#" + message;
                                 //Fanout
 //                                channel.queueBind(userName, "key0", userName + "_" + PrefsUtils.getInstance().getUserName());
-                                channel.basicPublish("key1", userName + "_all", null, message.getBytes());
-
+                                channel.basicPublish(EXCHANGE_FANOUT, userName + "_all", null, message.getBytes());
                             }
 
                             Log.d("", "[s] " + message);
@@ -246,14 +248,13 @@ public class ChatActivity extends AppCompatActivity {
 
 
                 if (type.equals("Direct")) {
-                    channel.queueBind(PrefsUtils.getInstance().getUserName(), "key0", PrefsUtils.getInstance().getUserName() + "_" + userName);
+                    channel.queueBind(PrefsUtils.getInstance().getUserName(), EXCHANGE_DIRECT, PrefsUtils.getInstance().getUserName() + "_" + userName);
                 } else if (type.equals("Topic")) {
-                    channel.queueBind(PrefsUtils.getInstance().getUserName(), "key2", group);
+                    channel.queueBind(PrefsUtils.getInstance().getUserName(), EXCHANGE_TOPIC, group);
 
                 } else {
                     //Fanout
-                    channel.queueBind(PrefsUtils.getInstance().getUserName(), "key1", "SA");
-
+                    channel.queueBind(PrefsUtils.getInstance().getUserName(), EXCHANGE_FANOUT, "all");
                 }
 
 

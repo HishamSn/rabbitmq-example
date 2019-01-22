@@ -8,6 +8,9 @@ public class AppConstant {
     public static final String PASSWORD = "admin";
 
     public static final String GET_QUEUES = "queues/" + V_HOST;
+    public static final String EXCHANGE_DIRECT = "key0";
+    public static final String EXCHANGE_FANOUT = "key1";
+    public static final String EXCHANGE_TOPIC = "key2";
 
 
 }

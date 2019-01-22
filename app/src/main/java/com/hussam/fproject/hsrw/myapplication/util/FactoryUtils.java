@@ -5,6 +5,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.BASE_SERVER;
 import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.PASSWORD;
 import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.USER_NAME;
+import static com.hussam.fproject.hsrw.myapplication.constant.AppConstant.V_HOST;
 
 public class FactoryUtils {
 
@@ -14,7 +15,7 @@ public class FactoryUtils {
         connectionFactory.setAutomaticRecoveryEnabled(false);
         connectionFactory.setUsername(USER_NAME);
         connectionFactory.setPassword(PASSWORD);
-        connectionFactory.setVirtualHost("ddd");
+        connectionFactory.setVirtualHost(V_HOST);
         connectionFactory.setHost(BASE_SERVER);
         connectionFactory.setPort(5672);
     }
